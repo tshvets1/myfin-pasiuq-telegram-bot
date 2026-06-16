@@ -1,6 +1,5 @@
 require('dotenv').config();
 const { Telegraf } = require('telegraf');
-const http = require('http');
 const { handleAddStart, handleCategoryCallback, handleAmountInput } = require('./handlers/add');
 const { handleStats } = require('./handlers/stats');
 const { getState } = require('./services/state');
@@ -35,14 +34,6 @@ bot.on('text', async (ctx) => {
 
 bot.launch();
 console.log('Bot started');
-
-const PORT = process.env.PORT || 3000;
-http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('OK');
-}).listen(PORT, () => {
-  console.log(`Health check server on port ${PORT}`);
-});
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
