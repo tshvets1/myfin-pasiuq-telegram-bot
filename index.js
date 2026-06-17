@@ -1,6 +1,13 @@
 require('dotenv').config();
 const { Telegraf } = require('telegraf');
-const { handleAddStart, handleCategoryCallback, handleAmountInput } = require('./handlers/add');
+const {
+  handleAddStart,
+  handleCurrencyTypeCallback,
+  handleForeignCurrencyCallback,
+  handleCategoryCallback,
+  handleAmountInput,
+  handleConversionConfirmCallback,
+} = require('./handlers/add');
 const { handleStats } = require('./handlers/stats');
 const { getState } = require('./services/state');
 const { MAIN_MENU } = require('./services/keyboards');
@@ -20,8 +27,14 @@ bot.on('callback_query', async (ctx) => {
   } else if (data === 'action:stats') {
     await ctx.answerCbQuery();
     await handleStats(ctx);
+  } else if (data?.startsWith('currency_type:')) {
+    await handleCurrencyTypeCallback(ctx);
+  } else if (data?.startsWith('foreign_currency:')) {
+    await handleForeignCurrencyCallback(ctx);
   } else if (data?.startsWith('cat:')) {
     await handleCategoryCallback(ctx);
+  } else if (data?.startsWith('conversion:')) {
+    await handleConversionConfirmCallback(ctx);
   }
 });
 
